@@ -19,8 +19,6 @@
     forniture: { title: "Hardware e software", text: "PC, server, backup, virtualizzazione e licenze Microsoft.", anchor: [4.2, 2.1, 1.6], focus: [3.4, 1, 1.4] }
   };
   var ORDER = ["helpdesk", "sistemi", "reti", "sicurezza", "web", "forniture"];
-  var HOME = { target: [0, 1.7, 0.2], dist: 21 };
-  var FOCUS_DIST = 16;
 
   /* ---------- Geometria ---------- */
   // box: centro x, base y, centro z, larghezza, altezza, profondità, servizio, righe decorative
@@ -118,9 +116,22 @@
   }
 
   /* ---------- Camera ---------- */
-  var cam = { yaw: Math.PI + 0.55, pitch: 0.5, dist: HOME.dist, t: HOME.target.slice() };
-  var goal = { dist: HOME.dist, t: HOME.target.slice() };
-  var user = { yaw: Math.PI + 0.55, pitch: 0.5 };     // impostati dal trascinamento
+  var PI = Math.PI;
+  // inquadrature: una per tappa dello scroll (hero, introduzione, sei servizi, uscita)
+  var SHOTS = {
+    hero:      { yaw: PI + 0.55, pitch: 0.5,  dist: 21, t: [0, 1.7, 0.2] },
+    intro:     { yaw: PI + 0.12, pitch: 0.78, dist: 24, t: [0, 0.8, 0.5] },
+    helpdesk:  { yaw: PI + 0.45, pitch: 0.42, dist: 14, t: [0, 0.8, 3.6] },
+    sistemi:   { yaw: PI - 0.5,  pitch: 0.4,  dist: 15, t: [-3.6, 1.3, 1.4] },
+    reti:      { yaw: PI + 0.2,  pitch: 0.62, dist: 13, t: [0, 0.5, 0.2] },
+    sicurezza: { yaw: PI - 0.35, pitch: 0.36, dist: 14, t: [0, 1.2, -2.6] },
+    web:       { yaw: PI + 0.6,  pitch: 0.24, dist: 15, t: [2.6, 4.2, -2.6] },
+    forniture: { yaw: PI + 0.8,  pitch: 0.45, dist: 14, t: [3.8, 0.9, 1.5] },
+    end:       { yaw: PI + 0.55, pitch: 1.0,  dist: 27, t: [0, 0.4, 0.5] }
+  };
+  var cam = { yaw: SHOTS.hero.yaw, pitch: SHOTS.hero.pitch, dist: SHOTS.hero.dist, t: SHOTS.hero.t.slice() };
+  var goal = { yaw: cam.yaw, pitch: cam.pitch, dist: cam.dist, t: cam.t.slice() };
+  var drag = { yaw: 0, pitch: 0 };            // scostamento dato dal trascinamento
   var hover = { x: 0, y: 0, ex: 0, ey: 0 };  // parallasse col puntatore
   var W = 0, H = 0, cx = 0, cy = 0, focal = 0, dpr = 1;
   var sy, cyw, sp, cp, camPos = [0, 0, 0];
@@ -154,11 +165,13 @@
     W = r.width; H = r.height;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     if (wide.matches) {
-      cx = W * 0.73; cy = H * 0.47;
-      focal = Math.min(W * 0.55, H) * 1.7;
+      var copy = document.querySelector(".hero-copy");
+      var edge = copy ? copy.getBoundingClientRect().right - r.left : W * 0.45;
+      cx = (edge + W) / 2 + W * 0.02; cy = H * 0.52;
+      focal = Math.min((W - edge) * 1.05, H) * 1.6;
     } else {
-      cx = W * 0.54; cy = H * 0.41;
-      focal = Math.min(W, H) * 1.75;
+      cx = W * 0.5; cy = H * 0.56;
+      focal = Math.min(W, H * 1.25) * 1.7;
     }
   }
 
@@ -314,19 +327,73 @@
   var capLink = document.getElementById("cap-link");
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  function activate(key, fly) {
-    if (!SERVICES[key]) return;
-    active = key;
+  function activate(key) {
+    if (key === active) return;
+    active = SERVICES[key] ? key : null;
     labels.forEach(function (el) {
-      var on = el.dataset.svc === key;
+      var on = el.dataset.svc === active;
       el.classList.toggle("is-active", on);
       if (on) el.setAttribute("aria-current", "true"); else el.removeAttribute("aria-current");
     });
-    capTitle.textContent = SERVICES[key].title;
-    capText.textContent = SERVICES[key].text;
-    capLink.setAttribute("href", "#svc-" + key);
-    if (fly) { goal.t = SERVICES[key].focus.slice(); goal.dist = FOCUS_DIST; }
-    if (reduced.matches) { cam.t = goal.t.slice(); cam.dist = goal.dist; }
+    if (active) {
+      capTitle.textContent = SERVICES[active].title;
+      capText.textContent = SERVICES[active].text;
+      capLink.setAttribute("href", "#svc-" + active);
+    }
+  }
+
+  /* ---------- Scroll → camera ----------
+     Ogni tappa (hero, introduzione, capitoli) ha la sua inquadratura. La posizione
+     dello scroll fra due tappe interpola fra le due inquadrature, con una sosta
+     su ciascuna: la camera si ferma mentre si legge e riparte verso la successiva. */
+  var journey = document.getElementById("journey");
+  var stops = journey ? [].slice.call(journey.querySelectorAll("[data-key]")) : [];
+  var chapters = stops.filter(function (el) { return el.classList.contains("chapter"); });
+  var atHero = true, tourKey = null;
+
+  function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
+  function lerp(a, b, k) { return a + (b - a) * k; }
+  function setGoal(a, b, k) {
+    goal.yaw = lerp(a.yaw, b.yaw, k); goal.pitch = lerp(a.pitch, b.pitch, k); goal.dist = lerp(a.dist, b.dist, k);
+    for (var i = 0; i < 3; i++) goal.t[i] = lerp(a.t[i], b.t[i], k);
+  }
+
+  function onScroll() {
+    if (!stops.length) return;
+    var vh = window.innerHeight;
+    // linea di lettura: centro dello schermo, o dello spazio sotto la scena su mobile
+    var ref = vh * 0.5;
+    if (!wide.matches) {
+      var sb = stage.getBoundingClientRect().bottom;
+      ref = sb > 0 && sb < vh ? sb + (vh - sb) * 0.45 : vh * 0.5;
+    }
+    var y = window.scrollY;
+    var centers = stops.map(function (el, i) {
+      var r = el.getBoundingClientRect();
+      // l'hero "vale" finché la pagina è in cima: la sua tappa è la linea di lettura a scroll zero
+      return i === 0 ? ref - y : r.top + r.height / 2;
+    });
+    var keys = stops.map(function (el) { return el.dataset.key; });
+    // tappa finale: l'uscita dal viaggio
+    var jr = journey.getBoundingClientRect();
+    centers.push(Math.max(jr.bottom, centers[centers.length - 1] + 1)); keys.push("end");
+
+    var i = 0;
+    while (i < centers.length - 2 && centers[i + 1] <= ref) i++;
+    var span = centers[i + 1] - centers[i];
+    var t = span > 0 ? (ref - centers[i]) / span : 0;
+    var k = smooth((t - 0.3) / 0.4);            // sosta all'inizio e alla fine di ogni tratto
+    if (reduced.matches) k = k < 0.5 ? 0 : 1;   // senza animazioni: si passa da un'inquadratura all'altra
+    setGoal(SHOTS[keys[i]], SHOTS[keys[i + 1]], k);
+
+    var near = k < 0.5 ? keys[i] : keys[i + 1];
+    var wasHero = atHero;
+    atHero = i === 0 && k < 0.02;
+    stage.classList.toggle("in-chapters", !atHero);
+    chapters.forEach(function (el) { el.classList.toggle("is-current", el.dataset.key === near); });
+    if (!atHero) { stopTour(); activate(SERVICES[near] ? near : null); }
+    else if (!wasHero) activate(ORDER[0]);
+    drag.yaw *= 0.94; drag.pitch *= 0.94;       // il trascinamento si riassorbe mentre si scorre
     requestDraw();
   }
 
@@ -341,34 +408,41 @@
       clock += dt;
       CABLES.forEach(function (c) { if (c.speed) c.t = (c.t + dt * c.speed) % 1; });
     }
-    var k = still ? 1 : 1 - Math.pow(0.0025, dt);   // inseguimento morbido
+    var k = still ? 1 : 1 - Math.pow(0.004, dt);   // inseguimento morbido
     hover.ex += (hover.x - hover.ex) * k; hover.ey += (hover.y - hover.ey) * k;
-    var sway = still || dragging ? 0 : Math.sin(clock * 0.22) * 0.16;
-    cam.yaw += (user.yaw + sway + hover.ex * 0.12 - cam.yaw) * k;
-    cam.pitch += (user.pitch + hover.ey * 0.05 - cam.pitch) * k;
-    cam.dist += (goal.dist - cam.dist) * k * 0.6;
-    for (var i = 0; i < 3; i++) cam.t[i] += (goal.t[i] - cam.t[i]) * k * 0.6;
+    var sway = still || dragging ? 0 : Math.sin(clock * 0.22) * (atHero ? 0.16 : 0.07);
+    var g = goal;
+    // nell'hero, il tour automatico avvicina la camera al servizio in evidenza
+    var tx = g.t[0], ty = g.t[1], tz = g.t[2], gd = g.dist;
+    if (atHero && tour && tourKey) {
+      var f = SERVICES[tourKey].focus; tx = f[0]; ty = f[1]; tz = f[2]; gd = 16;
+    }
+    cam.yaw += (g.yaw + drag.yaw + sway + hover.ex * 0.1 - cam.yaw) * k;
+    cam.pitch += (Math.max(0.2, Math.min(1.2, g.pitch + drag.pitch + hover.ey * 0.04)) - cam.pitch) * k;
+    cam.dist += (gd - cam.dist) * k;
+    cam.t[0] += (tx - cam.t[0]) * k; cam.t[1] += (ty - cam.t[1]) * k; cam.t[2] += (tz - cam.t[2]) * k;
     draw();
     if (running && visible && !still) raf = requestAnimationFrame(frame);
   }
   function requestDraw() { if (!raf) raf = requestAnimationFrame(frame); }
   function start() { running = true; last = performance.now(); requestDraw(); }
 
-  function stopTour() { if (tour) { clearInterval(tour); tour = null; } }
+  function stopTour() { if (tour) { clearInterval(tour); tour = null; tourKey = null; } }
   function startTour() {
     if (reduced.matches) return;
     var i = 0;
     tour = setInterval(function () {
-      if (!visible || document.hidden) return;
+      if (!visible || document.hidden || !atHero) return;
       i = (i + 1) % ORDER.length;
-      activate(ORDER[i], true);
+      tourKey = ORDER[i];
+      activate(tourKey);
     }, 4200);
   }
 
   /* ---------- Interazione ---------- */
-  var px = 0, py = 0, moved = 0;
+  var px = 0, py = 0;
   canvas.addEventListener("pointerdown", function (e) {
-    dragging = true; moved = 0; px = e.clientX; py = e.clientY;
+    dragging = true; px = e.clientX; py = e.clientY;
     canvas.setPointerCapture(e.pointerId);
     stage.classList.add("is-dragging");
     stopTour();
@@ -376,9 +450,8 @@
   canvas.addEventListener("pointermove", function (e) {
     if (dragging) {
       var dx = e.clientX - px, dy = e.clientY - py; px = e.clientX; py = e.clientY;
-      moved += Math.abs(dx) + Math.abs(dy);
-      user.yaw += dx * 0.007;
-      user.pitch = Math.max(0.22, Math.min(1.15, user.pitch + dy * 0.005));
+      drag.yaw += dx * 0.007;
+      drag.pitch = Math.max(-0.5, Math.min(0.7, drag.pitch + dy * 0.005));
     } else if (e.pointerType === "mouse") {
       var r = stage.getBoundingClientRect();
       hover.x = ((e.clientX - r.left) / r.width - 0.5) * 2;
@@ -387,43 +460,33 @@
     requestDraw();
   });
   var end = function () { dragging = false; stage.classList.remove("is-dragging"); };
-  canvas.addEventListener("pointerup", function (e) {
-    end();
-    // un tocco senza trascinamento sul vuoto riporta alla vista d'insieme
-    if (moved < 6) { goal.t = HOME.target.slice(); goal.dist = HOME.dist; requestDraw(); }
-  });
+  canvas.addEventListener("pointerup", end);
   canvas.addEventListener("pointercancel", end);
   canvas.addEventListener("pointerleave", function () { hover.x = 0; hover.y = 0; });
 
+  // un'etichetta porta al capitolo del suo servizio: è lo scroll a muovere la camera
   labels.forEach(function (el) {
     el.addEventListener("click", function (e) {
-      e.preventDefault(); stopTour(); activate(el.dataset.svc, true);
+      var target = document.getElementById("svc-" + el.dataset.svc);
+      if (!target) return;
+      e.preventDefault(); stopTour();
+      target.scrollIntoView({ behavior: reduced.matches ? "auto" : "smooth", block: wide.matches ? "center" : "start" });
     });
-    el.addEventListener("focus", function () { stopTour(); activate(el.dataset.svc, true); });
     el.addEventListener("pointerenter", function (e) {
-      if (e.pointerType === "mouse") { stopTour(); activate(el.dataset.svc, false); }
+      if (e.pointerType === "mouse" && atHero) { stopTour(); activate(el.dataset.svc); }
     });
   });
-
-  // la scena si "apre" leggermente mentre si scorre la pagina
-  var basePitch = user.pitch;
-  window.addEventListener("scroll", function () {
-    if (dragging || reduced.matches) return;
-    var r = stage.getBoundingClientRect();
-    var k = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height)));
-    user.pitch = basePitch + k * 0.35;
-    requestDraw();
-  }, { passive: true });
-  canvas.addEventListener("pointerup", function () { basePitch = user.pitch; });
 
   /* ---------- Avvio ---------- */
   readColors();
   resize();
   stage.classList.add("is-live");
-  activate(ORDER[0], false);
+  activate(ORDER[0]);
+  onScroll();
 
-  if ("ResizeObserver" in window) new ResizeObserver(function () { resize(); requestDraw(); }).observe(stage);
-  else window.addEventListener("resize", function () { resize(); requestDraw(); });
+  window.addEventListener("scroll", onScroll, { passive: true });
+  if ("ResizeObserver" in window) new ResizeObserver(function () { resize(); onScroll(); }).observe(stage);
+  window.addEventListener("resize", function () { resize(); onScroll(); });
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (en) {
       visible = en[0].isIntersecting;
@@ -436,7 +499,7 @@
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
     readColors(); requestDraw();
   });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(requestDraw);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { resize(); onScroll(); });
 
   start();
   startTour();

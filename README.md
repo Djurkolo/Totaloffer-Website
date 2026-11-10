@@ -12,10 +12,10 @@ php -S localhost:8000      # con il modulo contatti funzionante
 
 ## Struttura
 
-- `index.html` — home a pagina unica: hero, servizi, come iniziamo, chi siamo, contatti
+- `index.html` — home a pagina unica: hero e servizi con la scena 3D guidata dallo scroll, come iniziamo, chi siamo, contatti
 - `assets/css/style.css` — token di design (colori, tipografia, spazi) e stili; tema chiaro e scuro
 - `assets/js/main.js` — menu mobile, servizi, modulo contatti
-- `assets/js/scene.js` — scena 3D dell'hero (canvas, nessuna libreria esterna)
+- `assets/js/scene.js` — scena 3D (canvas, nessuna libreria esterna) e camera legata allo scroll
 - `invia.php` — riceve il modulo contatti, valida i dati e li spedisce a info@totaloffer.com
 - `assets/fonts/` — Archivo e IBM Plex (licenza OFL), ospitati in locale
 

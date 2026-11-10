@@ -68,9 +68,8 @@
 
 <main id="contenuto">
 
-  <!-- HERO -->
-  <section class="hero">
-    <!-- Scena 3D: la rete di un ufficio. Ogni dispositivo è un servizio. -->
+  <!-- VIAGGIO: la scena 3D resta fissa e la camera segue lo scroll, dall'hero ai sei servizi -->
+  <div class="journey" id="journey">
     <div class="stage" id="stage">
       <canvas aria-hidden="true"></canvas>
       <ul class="stage-labels" aria-label="Servizi nello schema di rete">
@@ -89,6 +88,7 @@
       </div>
     </div>
 
+    <section class="hero" data-key="hero">
     <div class="wrap">
       <div class="hero-copy">
         <p class="eyebrow mono">IT consulting · Roma</p>
@@ -105,7 +105,66 @@
         </dl>
       </div>
     </div>
-  </section>
+    </section>
+
+    <section class="chapters" id="servizi">
+      <div class="wrap">
+        <div class="chapter chapter-intro" data-key="intro">
+          <p class="eyebrow mono">I nostri servizi</p>
+          <h2>L'Information Technology a 360°</h2>
+          <p>Dalle forniture al disegno della rete, dalla configurazione alla manutenzione di PC e server, dalle licenze allo sviluppo.</p>
+        </div>
+        <article class="chapter" id="svc-helpdesk" data-key="helpdesk">
+          <p class="chapter-tag"><span class="mono">PC</span></p>
+          <h3>Helpdesk</h3>
+          <ul>
+            <li>Supporto agli utenti con assistenza hardware, software e configurazioni di rete.</li>
+            <li>Risoluzione immediata di problemi tecnici on site, per garantire continuità operativa.</li>
+            <li>Manutenzione proattiva di dispositivi e sistemi, per prevenire guasti e interruzioni di servizio.</li>
+          </ul>
+          <a class="text-link" href="#contatti" data-topic="Helpdesk">Chiedi info →</a>
+        </article>
+        <article class="chapter" id="svc-sistemi" data-key="sistemi">
+          <p class="chapter-tag"><span class="mono">SRV</span></p>
+          <h3>Gestione sistemi</h3>
+          <ul>
+            <li>Gestione e manutenzione di server, a garanzia di stabilità e disponibilità dei servizi IT aziendali.</li>
+            <li>Risoluzione di problemi tecnici complessi su reti, sistemi operativi e infrastrutture.</li>
+            <li>Pianificazione e implementazione di aggiornamenti hardware e software per ottimizzare le prestazioni.</li>
+          </ul>
+          <a class="text-link" href="#contatti" data-topic="Gestione sistemi">Chiedi info →</a>
+        </article>
+        <article class="chapter" id="svc-reti" data-key="reti">
+          <p class="chapter-tag"><span class="mono">SW</span></p>
+          <h3>Gestione reti</h3>
+          <ul>
+            <li>Monitoraggio continuo della rete per assicurare sicurezza e prestazioni ottimali.</li>
+            <li>Configurazione e manutenzione di infrastrutture di rete locali e remote, per connessioni affidabili.</li>
+            <li>Gestione degli accessi e controllo del traffico per proteggere dati e risorse aziendali.</li>
+          </ul>
+          <a class="text-link" href="#contatti" data-topic="Gestione reti">Chiedi info →</a>
+        </article>
+        <article class="chapter" id="svc-sicurezza" data-key="sicurezza">
+          <p class="chapter-tag"><span class="mono">FW</span></p>
+          <h3>Sicurezza infrastruttura</h3>
+          <p>Configurazione e gestione di firewall, VPN, SSL VPN, sistemi integrati di XTM, antispam, autenticazione forte e monitoraggio della sicurezza con Intrusion Detection.</p>
+          <a class="text-link" href="#contatti" data-topic="Sicurezza infrastruttura">Chiedi info →</a>
+        </article>
+        <article class="chapter" id="svc-web" data-key="web">
+          <p class="chapter-tag"><span class="mono">APP</span></p>
+          <h3>Applicazioni web</h3>
+          <p>Creazione di applicazioni web personalizzate, per offrire soluzioni su misura per specifiche esigenze aziendali, ottimizzate per funzionalità e design responsive.</p>
+          <a class="text-link" href="#contatti" data-topic="Applicazioni web">Chiedi info →</a>
+        </article>
+        <article class="chapter" id="svc-forniture" data-key="forniture">
+          <p class="chapter-tag"><span class="mono">HW</span></p>
+          <h3>Hardware e software</h3>
+          <p>Computer desktop e laptop, server ad alta disponibilità, backup e disaster recovery automatici, suite di collaborazione, virtualizzazione e licenze Microsoft.</p>
+          <a class="text-link" href="#contatti" data-topic="Hardware e software">Chiedi info →</a>
+        </article>
+      </div>
+    </section>
+  </div>
 
   <!-- PARTNER -->
   <section class="partners" aria-label="Partner">
@@ -119,109 +178,6 @@
         <li>Esprinet</li>
         <li>Computer Gross</li>
       </ul>
-    </div>
-  </section>
-
-  <!-- SERVIZI -->
-  <section class="section" id="servizi">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow mono">I nostri servizi</p>
-        <h2>L'Information Technology a 360°</h2>
-        <p>Dalle forniture al disegno della rete, dalla configurazione alla manutenzione di PC e server, dalle licenze allo sviluppo.</p>
-      </div>
-
-      <div class="services-list">
-        <details class="service" id="svc-helpdesk" name="servizi" open>
-          <summary>
-            <span class="tag mono" aria-hidden="true">PC</span>
-            <h3>Helpdesk</h3>
-            <span class="toggle" aria-hidden="true"></span>
-            <span class="teaser">Assistenza agli utenti su hardware, software e rete. Anche on site.</span>
-          </summary>
-          <div class="service-body">
-            <ul>
-              <li>Supporto agli utenti con assistenza hardware, software e configurazioni di rete.</li>
-              <li>Risoluzione immediata di problemi tecnici on site, per garantire continuità operativa.</li>
-              <li>Manutenzione proattiva di dispositivi e sistemi, per prevenire guasti e interruzioni di servizio.</li>
-            </ul>
-            <a class="text-link" href="#contatti" data-topic="Helpdesk">Chiedi info →</a>
-          </div>
-        </details>
-
-        <details class="service" id="svc-sistemi" name="servizi">
-          <summary>
-            <span class="tag mono" aria-hidden="true">SRV</span>
-            <h3>Gestione sistemi</h3>
-            <span class="toggle" aria-hidden="true"></span>
-            <span class="teaser">Server stabili, aggiornati e sempre disponibili.</span>
-          </summary>
-          <div class="service-body">
-            <ul>
-              <li>Gestione e manutenzione di server, a garanzia di stabilità e disponibilità dei servizi IT aziendali.</li>
-              <li>Risoluzione di problemi tecnici complessi su reti, sistemi operativi e infrastrutture.</li>
-              <li>Pianificazione e implementazione di aggiornamenti hardware e software per ottimizzare le prestazioni.</li>
-            </ul>
-            <a class="text-link" href="#contatti" data-topic="Gestione sistemi">Chiedi info →</a>
-          </div>
-        </details>
-
-        <details class="service" id="svc-reti" name="servizi">
-          <summary>
-            <span class="tag mono" aria-hidden="true">SW</span>
-            <h3>Gestione reti</h3>
-            <span class="toggle" aria-hidden="true"></span>
-            <span class="teaser">Reti locali e remote monitorate, sicure e affidabili.</span>
-          </summary>
-          <div class="service-body">
-            <ul>
-              <li>Monitoraggio continuo della rete per assicurare sicurezza e prestazioni ottimali.</li>
-              <li>Configurazione e manutenzione di infrastrutture di rete locali e remote, per connessioni affidabili.</li>
-              <li>Gestione degli accessi e controllo del traffico per proteggere dati e risorse aziendali.</li>
-            </ul>
-            <a class="text-link" href="#contatti" data-topic="Gestione reti">Chiedi info →</a>
-          </div>
-        </details>
-
-        <details class="service" id="svc-sicurezza" name="servizi">
-          <summary>
-            <span class="tag mono" aria-hidden="true">FW</span>
-            <h3>Sicurezza infrastruttura</h3>
-            <span class="toggle" aria-hidden="true"></span>
-            <span class="teaser">Firewall, VPN, antispam e autenticazione forte.</span>
-          </summary>
-          <div class="service-body">
-            <p>Configurazione e gestione di firewall, VPN, SSL VPN, sistemi integrati di XTM, antispam, autenticazione forte e monitoraggio della sicurezza con Intrusion Detection.</p>
-            <a class="text-link" href="#contatti" data-topic="Sicurezza infrastruttura">Chiedi info →</a>
-          </div>
-        </details>
-
-        <details class="service" id="svc-web" name="servizi">
-          <summary>
-            <span class="tag mono" aria-hidden="true">APP</span>
-            <h3>Applicazioni web</h3>
-            <span class="toggle" aria-hidden="true"></span>
-            <span class="teaser">Software su misura per le esigenze della tua azienda.</span>
-          </summary>
-          <div class="service-body">
-            <p>Creazione di applicazioni web personalizzate, per offrire soluzioni su misura per specifiche esigenze aziendali, ottimizzate per funzionalità e design responsive.</p>
-            <a class="text-link" href="#contatti" data-topic="Applicazioni web">Chiedi info →</a>
-          </div>
-        </details>
-
-        <details class="service" id="svc-forniture" name="servizi">
-          <summary>
-            <span class="tag mono" aria-hidden="true">HW</span>
-            <h3>Hardware e software</h3>
-            <span class="toggle" aria-hidden="true"></span>
-            <span class="teaser">PC, server, backup, virtualizzazione e licenze Microsoft.</span>
-          </summary>
-          <div class="service-body">
-            <p>Computer desktop e laptop, server ad alta disponibilità, backup e disaster recovery automatici, suite di collaborazione, virtualizzazione e licenze Microsoft.</p>
-            <a class="text-link" href="#contatti" data-topic="Hardware e software">Chiedi info →</a>
-          </div>
-        </details>
-      </div>
     </div>
   </section>
 
