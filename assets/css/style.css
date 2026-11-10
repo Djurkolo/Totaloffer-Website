@@ -239,10 +239,11 @@ h3 { font-size: var(--step-2); font-weight: 600; line-height: 1.15; }
 .hero-facts dd { font: 700 2rem/1 var(--font-display); font-stretch: 112%; font-variant-numeric: tabular-nums; }
 
 /* capitoli: un servizio per schermata, la camera si ferma sul suo dispositivo */
-.chapters { position: relative; z-index: 1; padding-bottom: 12vh; }
+.chapters { position: relative; z-index: 1; padding-bottom: 22vh; }
 .chapter {
   display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 1.25rem;
-  min-height: 88vh; max-width: 30rem;
+  min-height: 56vh; max-width: 30rem;
+  transition: opacity 0.35s;
   scroll-margin-top: 0;
 }
 .chapter h3 { font-size: var(--step-3); font-weight: 650; line-height: 1.08; letter-spacing: -0.015em; }
@@ -253,6 +254,9 @@ h3 { font-size: var(--step-2); font-weight: 600; line-height: 1.15; }
   background: var(--ink); color: var(--paper); letter-spacing: 0.06em;
   transition: background-color 0.3s, color 0.3s;
 }
+/* con capitoli più bassi se ne vedono due insieme: quello in lettura resta pieno, gli altri si attenuano */
+.stage.is-live ~ .chapters .chapter:not(.is-current) { opacity: 0.38; }
+.chapter:focus-within { opacity: 1 !important; }
 .chapter.is-current .chapter-tag .mono { background: var(--brand); color: var(--on-brand); }
 .chapter ul { display: grid; gap: 0.75rem; }
 .chapter li { position: relative; padding-left: 1.6rem; }
@@ -321,7 +325,7 @@ h3 { font-size: var(--step-2); font-weight: 600; line-height: 1.15; }
   .stage::after, .stage-caption { display: none; }
   .stage-hint { top: 0.75rem; left: var(--gutter); right: auto; }
   .chapters { order: 3; padding-bottom: 2rem; }
-  .chapter { min-height: 0; max-width: none; padding-block: clamp(3rem, 12vw, 5rem); }
+  .chapter { min-height: 0; max-width: none; padding-block: 2rem; }
   .tag3d { font-size: 0.74rem; padding: 0.25rem 0.55rem 0.25rem 0.3rem; gap: 0.35rem; }
   .tag3d .mono { font-size: 0.6rem; padding: 0.25rem 0.35rem; }
 }
