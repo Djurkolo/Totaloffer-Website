@@ -43,15 +43,11 @@
 
 <header class="site-header">
   <div class="wrap">
-    <!-- Segnaposto: sostituire con il logo ufficiale in SVG -->
     <a class="logo" href="#" aria-label="TotalOffer, torna all'inizio">
-      <svg viewBox="0 0 48 48" aria-hidden="true">
-        <circle cx="19" cy="24" r="15" fill="none" stroke="var(--brand)" stroke-width="5" stroke-dasharray="3.2 2.6"/>
-        <path d="M19 24h14l5-6h2M19 31h17" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="43" cy="18" r="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/>
-        <circle cx="39" cy="31" r="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/>
-      </svg>
-      <span class="logo-word"><b>TOTALOFFER</b><span>IT CONSULTING SERVICE</span></span>
+      <picture>
+        <source srcset="assets/img/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="assets/img/logo.svg" alt="TotalOffer — IT Consulting Service" width="276" height="90">
+      </picture>
     </a>
     <nav class="nav" id="nav" aria-label="Principale">
       <ul>

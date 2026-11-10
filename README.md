@@ -19,7 +19,6 @@ python3 -m http.server 8000
 
 ## Da completare prima della messa online
 
-- Logo ufficiale in SVG al posto del segnaposto nell'header e nella favicon
 - Loghi dei partner al posto dei nomi in testo
 - Modulo contatti: collegarlo a un endpoint reale (ora compone un'email)
 - Pagine privacy e cookie policy
