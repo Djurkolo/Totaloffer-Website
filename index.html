@@ -74,6 +74,25 @@
 
   <!-- HERO -->
   <section class="hero">
+    <!-- Scena 3D: la rete di un ufficio. Ogni dispositivo è un servizio. -->
+    <div class="stage" id="stage">
+      <canvas aria-hidden="true"></canvas>
+      <ul class="stage-labels" aria-label="Servizi nello schema di rete">
+        <li><a class="tag3d" href="#svc-helpdesk" data-svc="helpdesk"><span class="mono">PC</span>Helpdesk</a></li>
+        <li><a class="tag3d" href="#svc-sistemi" data-svc="sistemi"><span class="mono">SRV</span>Sistemi</a></li>
+        <li><a class="tag3d" href="#svc-reti" data-svc="reti"><span class="mono">SW</span>Reti</a></li>
+        <li><a class="tag3d" href="#svc-sicurezza" data-svc="sicurezza"><span class="mono">FW</span>Sicurezza</a></li>
+        <li><a class="tag3d" href="#svc-web" data-svc="web"><span class="mono">APP</span>Applicazioni web</a></li>
+        <li><a class="tag3d" href="#svc-forniture" data-svc="forniture"><span class="mono">HW</span>Hardware e software</a></li>
+      </ul>
+      <p class="stage-hint mono"><span class="led" aria-hidden="true"></span>Rete operativa · trascina per ruotare</p>
+      <div class="stage-caption" aria-live="polite">
+        <b id="cap-title">Helpdesk</b>
+        <p id="cap-text">Assistenza agli utenti su hardware, software e rete. Anche on site.</p>
+        <a id="cap-link" href="#svc-helpdesk">Dettagli →</a>
+      </div>
+    </div>
+
     <div class="wrap">
       <div class="hero-copy">
         <p class="eyebrow mono">IT consulting · Roma</p>
@@ -88,78 +107,6 @@
           <div><dt>aree di servizio</dt><dd>6</dd></div>
           <div><dt>referente per tutto</dt><dd>1</dd></div>
         </dl>
-      </div>
-
-      <div class="schema" id="schema">
-        <div class="schema-frame">
-          <div class="schema-bar mono">
-            <span>La rete del tuo ufficio</span>
-            <span><span class="led" aria-hidden="true"></span>Operativa</span>
-          </div>
-          <svg viewBox="0 0 520 412" role="group" aria-label="Schema di una rete aziendale: ogni nodo è un servizio TotalOffer">
-            <!-- tracce -->
-            <path class="trace" id="t-wan" data-for="sicurezza" d="M260 32V84"/>
-            <path class="trace" id="t-app" data-for="web" d="M260 58H366L384 76H394"/>
-            <path class="trace" id="t-core" data-for="reti" d="M260 136V184"/>
-            <path class="trace" id="t-srv" data-for="sistemi" d="M234 210H160L110 260V274"/>
-            <path class="trace" id="t-pc" data-for="helpdesk" d="M260 236V304"/>
-            <path class="trace" id="t-hw" data-for="forniture" d="M286 210H360L410 260V274"/>
-            <circle class="tap" cx="260" cy="26" r="6"/>
-            <circle class="tap" cx="260" cy="58" r="4"/>
-            <text class="net" x="276" y="30">INTERNET</text>
-
-            <!-- pacchetti in transito -->
-            <circle class="packet" r="4"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#t-wan"/></animateMotion></circle>
-            <circle class="packet" r="4"><animateMotion dur="3.6s" begin="-0.8s" repeatCount="indefinite"><mpath href="#t-app"/></animateMotion></circle>
-            <circle class="packet" r="4"><animateMotion dur="2.2s" begin="-0.4s" repeatCount="indefinite"><mpath href="#t-core"/></animateMotion></circle>
-            <circle class="packet" r="4"><animateMotion dur="4.2s" begin="-1.2s" repeatCount="indefinite"><mpath href="#t-srv"/></animateMotion></circle>
-            <circle class="packet" r="4"><animateMotion dur="2.8s" begin="-0.2s" repeatCount="indefinite"><mpath href="#t-pc"/></animateMotion></circle>
-            <circle class="packet" r="4"><animateMotion dur="4.6s" begin="-2s" repeatCount="indefinite"><mpath href="#t-hw"/></animateMotion></circle>
-
-            <!-- nodi = servizi -->
-            <a class="node" href="#svc-sicurezza" data-svc="sicurezza">
-              <circle class="ring" cx="260" cy="110" r="26"/>
-              <text class="code" x="260" y="114">FW</text>
-              <text class="name" x="222" y="107" text-anchor="end">Sicurezza</text>
-              <text class="sub" x="222" y="123" text-anchor="end">Firewall · VPN</text>
-            </a>
-            <a class="node" href="#svc-web" data-svc="web">
-              <circle class="ring" cx="420" cy="76" r="26"/>
-              <text class="code" x="420" y="80">APP</text>
-              <text class="name" x="420" y="124" text-anchor="middle">Applicazioni web</text>
-              <text class="sub" x="420" y="140" text-anchor="middle">Su misura</text>
-            </a>
-            <a class="node" href="#svc-reti" data-svc="reti">
-              <circle class="ring" cx="260" cy="210" r="26"/>
-              <text class="code" x="260" y="214">SW</text>
-              <text class="name" x="298" y="180">Reti</text>
-              <text class="sub" x="298" y="196">Switch · Wi-Fi</text>
-            </a>
-            <a class="node" href="#svc-sistemi" data-svc="sistemi">
-              <circle class="ring" cx="110" cy="300" r="26"/>
-              <text class="code" x="110" y="304">SRV</text>
-              <text class="name" x="110" y="348" text-anchor="middle">Sistemi</text>
-              <text class="sub" x="110" y="364" text-anchor="middle">Server · NAS · Backup</text>
-            </a>
-            <a class="node" href="#svc-helpdesk" data-svc="helpdesk">
-              <circle class="ring" cx="260" cy="330" r="26"/>
-              <text class="code" x="260" y="334">PC</text>
-              <text class="name" x="260" y="378" text-anchor="middle">Helpdesk</text>
-              <text class="sub" x="260" y="394" text-anchor="middle">Postazioni utente</text>
-            </a>
-            <a class="node" href="#svc-forniture" data-svc="forniture">
-              <circle class="ring" cx="410" cy="300" r="26"/>
-              <text class="code" x="410" y="304">HW</text>
-              <text class="name" x="410" y="348" text-anchor="middle">Hardware · Software</text>
-              <text class="sub" x="410" y="364" text-anchor="middle">Forniture · Licenze</text>
-            </a>
-          </svg>
-          <div class="schema-caption" aria-live="polite">
-            <b id="cap-title">Helpdesk</b>
-            <p id="cap-text">Assistenza agli utenti su hardware, software e rete. Anche on site.</p>
-            <a id="cap-link" href="#svc-helpdesk">Dettagli →</a>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -413,5 +360,6 @@
 </footer>
 
 <script src="assets/js/main.js" defer></script>
+<script src="assets/js/scene.js" defer></script>
 </body>
 </html>

@@ -13,7 +13,8 @@ python3 -m http.server 8000
 
 - `index.html` — home a pagina unica: hero, servizi, come iniziamo, chi siamo, contatti
 - `assets/css/style.css` — token di design (colori, tipografia, spazi) e stili; tema chiaro e scuro
-- `assets/js/main.js` — menu mobile, schema di rete interattivo, modulo contatti
+- `assets/js/main.js` — menu mobile, servizi, modulo contatti
+- `assets/js/scene.js` — scena 3D dell'hero (canvas, nessuna libreria esterna)
 - `assets/fonts/` — Archivo e IBM Plex (licenza OFL), ospitati in locale
 
 ## Da completare prima della messa online
