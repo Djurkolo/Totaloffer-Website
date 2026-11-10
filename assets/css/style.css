@@ -32,6 +32,7 @@
   --brand-text: #006f8e;   /* ciano leggibile come testo su carta */
   --on-brand: #06222c;
   --led: #23a862;          /* verde "operativo" */
+  --danger: #b3261e;       /* errori del modulo */
   --band: #0a2733;         /* fascia scura */
   --band-ink: #e8f2f5;
   --band-soft: #9fb9c3;
@@ -68,6 +69,7 @@
     --brand-text: #5fd2f1;
     --on-brand: #04181f;
     --led: #3fd487;
+    --danger: #ff9a8f;
     --band: #0c2630;
     --band-ink: #e6f1f4;
     --band-soft: #9db6bf;
@@ -429,6 +431,34 @@ fieldset.field { border: 0; margin: 0; padding: 0; }
 .consent input { width: 1.2rem; height: 1.2rem; min-height: 0; margin-top: 0.15rem; flex: none; accent-color: var(--brand); }
 .form-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; }
 .form-note { color: var(--ink-soft); font-size: 0.9rem; flex: 1 1 14rem; }
+.form-area { min-width: 0; }
+.form[hidden], .form-done[hidden] { display: none; }
+.trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.field [aria-invalid="true"] { border-color: var(--danger); }
+.field-error { color: var(--danger); font-size: 0.9rem; font-weight: 500; }
+.consent .field-error { flex-basis: 100%; }
+.consent { flex-wrap: wrap; }
+.form-status {
+  grid-column: 1 / -1; padding: 0.9rem 1rem;
+  border: 1px solid var(--danger); border-left-width: 3px; border-radius: var(--radius);
+  color: var(--danger); font-weight: 500; line-height: 1.45;
+}
+.form-status a { color: inherit; font-weight: 600; text-underline-offset: 0.25em; }
+.btn:disabled { opacity: 0.6; cursor: progress; }
+.form-done {
+  display: grid; gap: 1rem; justify-items: start; align-content: start;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid var(--line); border-top: 3px solid var(--led); border-radius: var(--radius);
+  background: var(--paper);
+}
+.form-done:focus { outline: none; }
+.form-done p { color: var(--ink-soft); max-width: 30rem; }
+/* anello "operativo": il terminale del logo che si accende */
+.done-ring {
+  width: 3rem; height: 3rem; border-radius: 50%;
+  border: 3px solid var(--led);
+  background: radial-gradient(circle, var(--led) 0 38%, transparent 40%);
+}
 @media (max-width: 900px) {
   .contact .wrap { grid-template-columns: minmax(0, 1fr); }
 }

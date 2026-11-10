@@ -287,8 +287,13 @@
         </dl>
       </div>
 
-      <!-- TODO: collegare a un endpoint reale. Per ora compone un'email verso info@totaloffer.com -->
-      <form class="form" id="form-contatti" action="mailto:info@totaloffer.com" method="post" enctype="text/plain">
+      <div class="form-area">
+      <form class="form" id="form-contatti" action="invia.php" method="post">
+        <!-- campo-trappola per i bot: nascosto alle persone -->
+        <div class="trap" aria-hidden="true">
+          <label for="sito">Lascia vuoto questo campo</label>
+          <input id="sito" name="sito" type="text" tabindex="-1" autocomplete="off">
+        </div>
         <fieldset class="field full">
           <legend>Di cosa hai bisogno?</legend>
           <div class="chips">
@@ -335,10 +340,18 @@
           <span>Ho letto la <a href="https://www.totaloffer.com/privacy-policy/">privacy policy</a> e acconsento al trattamento dei dati per ricevere una risposta.</span>
         </label>
         <div class="form-foot">
-          <button class="btn btn-primary" type="submit">Prepara l'email <span class="arrow" aria-hidden="true">→</span></button>
-          <p class="form-note" id="form-note">Si apre il tuo programma di posta con il messaggio già compilato.</p>
+          <button class="btn btn-primary" type="submit" id="form-invia">Invia la richiesta <span class="arrow" aria-hidden="true">→</span></button>
+          <p class="form-note">Ti rispondiamo all'indirizzo email che ci indichi.</p>
         </div>
+        <div class="form-status full" id="form-status" role="alert" hidden></div>
       </form>
+      <div class="form-done" id="form-done" tabindex="-1" hidden>
+        <span class="done-ring" aria-hidden="true"></span>
+        <h3>Richiesta inviata</h3>
+        <p id="form-done-text">Grazie. Ti rispondiamo al più presto.</p>
+        <button class="btn btn-ghost" type="button" id="form-nuova">Invia un'altra richiesta</button>
+      </div>
+      </div>
     </div>
   </section>
 </main>

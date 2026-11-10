@@ -40,13 +40,17 @@
   });
 
   /* ---------- Modulo contatti ----------
-     Finché non c'è un endpoint lato server, il modulo compone un'email
-     verso info@totaloffer.com nel programma di posta dell'utente. */
+     Invia i dati a invia.php (stesso sito) e mostra l'esito nella pagina.
+     Se il server non risponde, propone l'invio dal programma di posta. */
   var form = document.getElementById("form-contatti");
   if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var d = new FormData(form);
+    var status = document.getElementById("form-status");
+    var done = document.getElementById("form-done");
+    var doneText = document.getElementById("form-done-text");
+    var button = document.getElementById("form-invia");
+    var buttonHtml = button.innerHTML;
+
+    var mailtoLink = function (d) {
       var subject = "[" + d.get("tipo") + "] " + (d.get("servizio") || "Richiesta dal sito") + " - " + d.get("nome");
       var lines = [
         "Nome: " + d.get("nome"),
@@ -58,10 +62,75 @@
         "",
         d.get("messaggio")
       ].filter(function (l) { return l !== null; });
-      location.href = "mailto:info@totaloffer.com?subject=" + encodeURIComponent(subject) +
+      return "mailto:info@totaloffer.com?subject=" + encodeURIComponent(subject) +
         "&body=" + encodeURIComponent(lines.join("\n"));
-      var note = document.getElementById("form-note");
-      if (note) note.textContent = "Non si è aperto nulla? Scrivi a info@totaloffer.com o chiama lo 06 5833 4882.";
+    };
+
+    var clearErrors = function () {
+      status.hidden = true; status.textContent = "";
+      form.querySelectorAll("[aria-invalid]").forEach(function (el) { el.removeAttribute("aria-invalid"); });
+      form.querySelectorAll(".field-error").forEach(function (el) { el.remove(); });
+    };
+    var showError = function (text, link) {
+      status.textContent = text;
+      if (link) {
+        var a = document.createElement("a");
+        a.href = link; a.textContent = "Invia dal tuo programma di posta";
+        status.appendChild(document.createTextNode(" "));
+        status.appendChild(a);
+      }
+      status.hidden = false;
+    };
+    var showFieldErrors = function (fields) {
+      var first = null;
+      Object.keys(fields).forEach(function (name) {
+        var el = form.elements[name];
+        if (!el || !el.id) return;
+        el.setAttribute("aria-invalid", "true");
+        var p = document.createElement("p");
+        p.className = "field-error"; p.id = el.id + "-errore"; p.textContent = fields[name];
+        el.setAttribute("aria-describedby", p.id);
+        (el.closest(".field") || el.parentNode).appendChild(p);
+        if (!first) first = el;
+      });
+      if (first) first.focus();
+    };
+    var showDone = function (name, email) {
+      doneText.textContent = "Grazie" + (name ? ", " + name.split(" ")[0] : "") +
+        ". Abbiamo ricevuto il tuo messaggio e ti rispondiamo" + (email ? " a " + email : "") + " al più presto.";
+      form.hidden = true; done.hidden = false; done.focus();
+    };
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      clearErrors();
+      var d = new FormData(form);
+      button.disabled = true; button.textContent = "Invio in corso…";
+      fetch(form.action, { method: "POST", headers: { Accept: "application/json" }, body: d })
+        .then(function (r) {
+          return r.json().then(function (j) { return { status: r.status, body: j }; });
+        })
+        .then(function (res) {
+          if (res.body && res.body.ok) { showDone(d.get("nome"), d.get("email")); form.reset(); return; }
+          var fields = (res.body && res.body.campi) || {};
+          showError((res.body && res.body.errore) || "Invio non riuscito.", res.status >= 500 ? mailtoLink(d) : null);
+          if (Object.keys(fields).length) showFieldErrors(fields);
+        })
+        .catch(function () {
+          // server irraggiungibile o senza PHP (es. anteprima statica)
+          showError("Non siamo riusciti a inviare il messaggio da qui.", mailtoLink(d));
+        })
+        .then(function () { button.disabled = false; button.innerHTML = buttonHtml; });
     });
+
+    document.getElementById("form-nuova").addEventListener("click", function () {
+      done.hidden = true; form.hidden = false;
+      var first = document.getElementById("nome"); if (first) first.focus();
+    });
+
+    // esito dopo un invio senza JavaScript (redirect da invia.php)
+    var esito = /[?&]modulo=(inviato|errore)/.exec(location.search);
+    if (esito && esito[1] === "inviato") showDone("", "");
+    if (esito && esito[1] === "errore") showError("Invio non riuscito. Controlla i campi e riprova, oppure scrivi a info@totaloffer.com.");
   }
 })();
