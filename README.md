@@ -2,6 +2,11 @@
 
 Prototipo statico della nuova home di [totaloffer.com](https://www.totaloffer.com). Nessuna build: HTML, CSS e JS semplici.
 
+## Due versioni
+
+- `/` — versione 1: scena 3D guidata dallo scroll
+- `/v2/` — versione 2: come la 1, con l'intro animata (il logo si scompone e si entra nel sito dall'anello della "O"). File propri in `v2/`, indipendenti dalla versione 1
+
 ## Anteprima locale
 
 ```bash
