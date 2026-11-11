@@ -33,6 +33,15 @@
   <meta property="og:description" content="Helpdesk, sistemi, reti, sicurezza, applicazioni web, hardware e licenze. Da 20 anni a Roma.">
   <meta name="theme-color" content="#f2f6f8" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#071a22" media="(prefers-color-scheme: dark)">
+  <script>
+    /* Tema scelto dall'utente: va applicato prima del primo disegno, per non far lampeggiare l'altro. */
+    (function () {
+      try {
+        var t = localStorage.getItem("to-tema");
+        if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/style.css">
@@ -67,10 +76,8 @@
 <header class="site-header">
   <div class="wrap">
     <a class="logo" href="#" aria-label="TotalOffer, torna all'inizio">
-      <picture>
-        <source srcset="assets/img/logo-dark.svg" media="(prefers-color-scheme: dark)">
-        <img src="assets/img/logo.svg" alt="TotalOffer — IT Consulting Service" width="276" height="90">
-      </picture>
+      <img class="logo-light" src="assets/img/logo.svg" alt="TotalOffer — IT Consulting Service" width="276" height="90">
+      <img class="logo-dark" src="assets/img/logo-dark.svg" alt="TotalOffer — IT Consulting Service" width="276" height="90">
     </a>
     <nav class="nav" id="nav" aria-label="Principale">
       <ul>
@@ -83,6 +90,10 @@
     <a class="header-phone" href="tel:+390658334882" aria-label="Chiama TotalOffer: 06 5833 4882">
       <span class="led" aria-hidden="true"></span><span class="num">06 5833 4882</span>
     </a>
+    <button class="theme-toggle" type="button" id="tema" aria-label="Passa al tema scuro">
+      <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
     <button class="nav-toggle" type="button" aria-controls="nav" aria-expanded="false" aria-label="Apri il menu">
       <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     </button>

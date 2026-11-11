@@ -30,7 +30,8 @@
   var ENTER_AT = 0.3;   // frazione del volo in cui il sito comincia ad animarsi
 
   /* ---------- Colori ---------- */
-  var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var chosen = root.getAttribute("data-theme");   // scelta esplicita dal pulsante del tema
+  var dark = chosen ? chosen === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
   var css = getComputedStyle(root);
   var PAPER = css.getPropertyValue("--paper").trim() || "#f2f6f8";
   function hex(v) { v = v.replace("#", ""); return [parseInt(v.slice(0, 2), 16), parseInt(v.slice(2, 4), 16), parseInt(v.slice(4, 6), 16)]; }

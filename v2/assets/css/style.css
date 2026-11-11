@@ -58,8 +58,9 @@
   --header-h: 5.0625rem;   /* altezza dell'header fisso, bordo incluso */
 }
 
+/* Tema scuro: segue il sistema, salvo scelta esplicita col pulsante nell'header (data-theme sulla radice) */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     color-scheme: dark;
     --paper: #071a22;
     --surface: #0c2630;
@@ -76,6 +77,23 @@
     --band-soft: #9db6bf;
     --band-line: #25505f;
   }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #071a22;
+  --surface: #0c2630;
+  --ink: #e6f1f4;
+  --ink-soft: #9db6bf;
+  --line: #214552;
+  --brand: #25bde6;
+  --brand-text: #5fd2f1;
+  --on-brand: #04181f;
+  --led: #3fd487;
+  --danger: #ff9a8f;
+  --band: #0c2630;
+  --band-ink: #e6f1f4;
+  --band-soft: #9db6bf;
+  --band-line: #25505f;
 }
 
 /* ---------- Base ---------- */
@@ -162,6 +180,29 @@ h3 { font-size: var(--step-2); font-weight: 600; line-height: 1.15; }
 .site-header .wrap { display: flex; align-items: center; gap: 1.5rem; min-height: 5rem; }
 .logo { display: inline-flex; align-items: center; margin-right: auto; text-decoration: none; }
 .logo img { display: block; height: 3.75rem; width: auto; }
+.logo .logo-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo .logo-light { display: none; }
+  :root:not([data-theme="light"]) .logo .logo-dark { display: block; }
+}
+:root[data-theme="dark"] .logo .logo-light { display: none; }
+:root[data-theme="dark"] .logo .logo-dark { display: block; }
+
+/* pulsante del tema: mostra l'icona del tema a cui si passa */
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 2.75rem; height: 2.75rem; padding: 0;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius); cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--brand); }
+.theme-toggle .icon-sun { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+}
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 .nav ul { display: flex; gap: clamp(1rem, 2.4vw, 2rem); }
 .nav a { font-weight: 500; font-size: 1rem; text-decoration: none; padding-block: 0.5rem; border-bottom: 2px solid transparent; }
 .nav a:hover { border-color: var(--brand); }

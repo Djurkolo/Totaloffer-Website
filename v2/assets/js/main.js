@@ -15,6 +15,30 @@
   // l'ancora #intro serve solo a far ripartire l'animazione: poi si toglie dall'indirizzo
   if (location.hash === "#intro") history.replaceState(null, "", location.pathname + location.search);
 
+  /* ---------- Tema chiaro / scuro ----------
+     Di base segue il sistema; il pulsante nell'header fissa una scelta, ricordata sul dispositivo. */
+  var themeBtn = document.getElementById("tema");
+  if (themeBtn) {
+    var rootEl = document.documentElement;
+    var sysDark = window.matchMedia("(prefers-color-scheme: dark)");
+    var isDark = function () {
+      var t = rootEl.getAttribute("data-theme");
+      return t ? t === "dark" : sysDark.matches;
+    };
+    var labelTheme = function () {
+      themeBtn.setAttribute("aria-label", isDark() ? "Passa al tema chiaro" : "Passa al tema scuro");
+    };
+    themeBtn.addEventListener("click", function () {
+      var next = isDark() ? "light" : "dark";
+      rootEl.setAttribute("data-theme", next);
+      try { localStorage.setItem("to-tema", next); } catch (err) { /* non disponibile */ }
+      labelTheme();
+      window.dispatchEvent(new CustomEvent("to:theme"));   // la scena 3D rilegge i colori
+    });
+    sysDark.addEventListener("change", labelTheme);
+    labelTheme();
+  }
+
   /* ---------- Menu mobile ---------- */
   var nav = document.getElementById("nav");
   var toggle = document.querySelector(".nav-toggle");

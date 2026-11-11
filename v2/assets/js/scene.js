@@ -527,6 +527,7 @@
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
     readColors(); requestDraw();
   });
+  window.addEventListener("to:theme", function () { readColors(); requestDraw(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { resize(); onScroll(); });
 
   // su schermi stretti la scena sta sotto il testo: durante l'intro occupa tutto lo schermo,
